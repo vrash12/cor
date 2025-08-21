@@ -1,30 +1,55 @@
-<!-- resources/views/farmers/shopinfo.blade.php -->
+@extends('layouts.app')
 
-<form action="{{ route('farmer.shopinfo.submit') }}" method="POST" enctype="multipart/form-data">
-    @csrf
+@section('title','Shop Info')
 
-    <!-- Shop Info -->
-    <h3>Shop Info</h3>
+@section('content')
+<div class="container py-4">
+    <h1 class="h4 mb-3">Seller Onboarding — Shop Info</h1>
 
-    <div>
-        <label for="farmname">Farm Name</label>
-        <input type="text" name="farmname" value="{{ old('farmname') }}" required>
-    </div>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+    @if(session('error'))
+        <div class="alert alert-danger">{{ session('error') }}</div>
+    @endif
 
-    <div>
-        <label for="pickup_address">Pickup Address</label>
-        <input type="text" name="pickup_address" value="{{ old('pickup_address') }}">
-    </div>
+    <form method="POST" action="{{ route('farmer.shopinfo.submit') }}">
+        @csrf
+        <div class="mb-3">
+            <label class="form-label">Farm / Shop Name</label>
+            <input type="text" name="farmname" class="form-control @error('farmname') is-invalid @enderror"
+                   value="{{ old('farmname', $farmer->farmname ?? '') }}" required>
+            @error('farmname') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
 
-    <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" value="{{ old('email') }}" required>
-    </div>
+        <div class="mb-3">
+            <label class="form-label">Pickup Address</label>
+            <input type="text" name="pickup_address" class="form-control @error('pickup_address') is-invalid @enderror"
+                   value="{{ old('pickup_address', $farmer->pickup_address ?? '') }}">
+            @error('pickup_address') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
 
-    <div>
-        <label for="phone">Phone Number</label>
-        <input type="text" name="phone" value="{{ old('phone') }}">
-    </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Contact Email</label>
+                <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                       value="{{ old('email', $user->email ?? '') }}" required>
+                @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Contact Phone</label>
+                <input type="text" name="phone" class="form-control @error('phone') is-invalid @enderror"
+                       value="{{ old('phone', $user->phone ?? '') }}">
+                @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
+            </div>
+        </div>
 
-    <button type="submit">Next</button>
-</form>
+        <div class="d-flex gap-2 mt-4">
+            <a href="{{ route('home') }}" class="btn btn-outline-secondary">Cancel</a>
+            <button class="btn btn-success" type="submit">
+                Save & Continue
+            </button>
+        </div>
+    </form>
+</div>
+@endsection
